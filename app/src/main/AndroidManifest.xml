@@ -10,6 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".root.App"
         android:theme="@style/AppTheme">
         <activity android:name=".login.LoginActivity">
             <intent-filter>
@@ -21,7 +22,8 @@
         <activity
             android:name=".serialentry.SerialEntryActivity"
             android:label="@string/title_activity_serial_entry"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".checkin.CheckInActivity"/>
     </application>
 
 </manifest>

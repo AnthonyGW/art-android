@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#0834D0</color>
     <color name="colorAccent">#49AAAF</color>
     <color name="EmailTextAlpha">#B3FFFFFF</color>
+    <color name="checkInButton">#009688</color>
+    <color name="checkOutButton">#FFAF30</color>
 </resources>
