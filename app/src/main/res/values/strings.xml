@@ -22,4 +22,5 @@
     <string name="cohort_title">cohort</string>
     <string name="header_image">header image</string>
     <string name="check_out">CHECK-OUT</string>
+    <string name="check_in_title">Resource Tracker</string>
 </resources>

@@ -23,7 +23,8 @@
             android:name=".serialentry.SerialEntryActivity"
             android:label="@string/title_activity_serial_entry"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".checkin.CheckInActivity"/>
+        <activity android:name=".checkin.CheckInActivity"
+            android:label="@string/check_in_title"/>
     </application>
 
 </manifest>
