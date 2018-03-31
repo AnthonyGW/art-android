@@ -17,4 +17,6 @@
     <string name="logout">Log out</string>
     <string name="send_feedback">Send feedback</string>
     <string name="report_a_problem">Report a problem</string>
+    <string name="logout_yes">YES</string>
+    <string name="logout_cancel">CANCEL</string>
 </resources>
