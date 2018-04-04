@@ -20,12 +20,6 @@ android {
         }
     }
     signingConfigs {
-        debug {
-            keyAlias rootProject.ext.debugKeystoreProperties['keyAlias']
-            keyPassword rootProject.ext.debugKeystoreProperties['keyPassword']
-            storeFile rootProject.file(rootProject.ext.debugKeystoreProperties['storeFile'])
-            storePassword rootProject.ext.debugKeystoreProperties['storePassword']
-        }
         release {
             keyAlias rootProject.ext.keystoreProperties['keyAlias']
             keyPassword rootProject.ext.keystoreProperties['keyPassword']
@@ -36,7 +30,6 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
-            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled false
