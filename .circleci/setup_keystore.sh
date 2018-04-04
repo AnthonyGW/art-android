@@ -14,6 +14,7 @@ function copyEnvVarsToProperties {
     then
         echo "${KEYSTORE_PROPERTIES} does not exist...Creating file"
 
+        mkdir $HOME"/repo/keystores"
         touch ${KEYSTORE_PROPERTIES}
 
         echo "keyAlias=$KEY_ALIAS" >> ${KEYSTORE_PROPERTIES}
