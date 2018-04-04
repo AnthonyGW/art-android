@@ -3,8 +3,7 @@
 set -ex
 set -o pipefail
 
-export GRADLE_PROPERTIES=$HOME"/repo/gradle.properties"
-export KEYSTORE_PROPERTIES=$HOME"/repo/app/keystores/keystore.properties"
+export KEYSTORE_PROPERTIES=$HOME"/repo/keystores/keystore.properties"
 export STORE_FILE_LOCATION=$HOME"/repo/art-android.jks"
 
 function copyEnvVarsToProperties {
