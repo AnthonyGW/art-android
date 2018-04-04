@@ -6,7 +6,7 @@ set -o pipefail
 export KEYSTORE_DIR=$HOME"/repo/keystores"
 export KEYSTORE_PROPERTIES=$HOME"/repo/keystores/keystore.properties"
 export DEBUG_KEYSTORE_PROPERTIES=$HOME"/repo/keystores/debug.keystore.properties"
-export STORE_FILE_LOCATION=$HOME"/repo/art-android.jks"
+export STORE_FILE_LOCATION=$HOME"/repo/art-android-ks"
 export DEBUG_STORE_FILE_LOCATION=$HOME"/repo/debug.keystore"
 
 function copyEnvVarsToProperties {
