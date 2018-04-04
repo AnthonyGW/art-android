@@ -41,6 +41,7 @@ function downloadKeyStoreFile {
 
 main() {
   
+  copyEnvVarsToProperties
   downloadKeyStoreFile
 
 }
