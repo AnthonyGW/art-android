@@ -61,6 +61,7 @@ function downloadKeyStoreFile {
         echo "Downloading keystore file"
 
         curl -L -o ${STORE_FILE} ${KEY_STORE_URI}
+        keytool -importkeystore -srckeystore art-android-ks -destkeystore art-android-ks -deststoretype pkcs12
     else
             echo "Keystore uri not set, .APK artifact will not be signed."
     fi
