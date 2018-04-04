@@ -255,7 +255,7 @@ jobs:
           name: Assembling apk
           command: |
             cd ~/repo
-            bash ~/repo/.circleci/download_keystore.sh
+            bash ~/repo/.circleci/setup_keystore.sh
             ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
