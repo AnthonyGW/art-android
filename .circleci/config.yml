@@ -256,7 +256,7 @@ jobs:
           command: |
             cd ~/repo
             bash ~/repo/.circleci/download_keystore.sh
-            ./gradlew build
+            ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
       - store_artifacts:

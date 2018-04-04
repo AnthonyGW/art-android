@@ -28,6 +28,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    signingConfigs {
+        release {
+            keyAlias rootProject.ext.keystoreProperties['keyAlias']
+            keyPassword rootProject.ext.keystoreProperties['keyPassword']
+            storeFile rootProject.file(rootProject.ext.keystoreProperties['storeFile'])
+            storePassword rootProject.ext.keystoreProperties['storePassword']
+        }
+    }
 }
 
 dependencies {
