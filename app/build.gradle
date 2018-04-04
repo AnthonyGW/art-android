@@ -19,15 +19,6 @@ android {
             enabled = true
         }
     }
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
     signingConfigs {
         debug {
             keyAlias rootProject.ext.debugKeystoreProperties['keyAlias']
@@ -40,6 +31,17 @@ android {
             keyPassword rootProject.ext.keystoreProperties['keyPassword']
             storeFile rootProject.file(rootProject.ext.keystoreProperties['storeFile'])
             storePassword rootProject.ext.keystoreProperties['storePassword']
+        }
+    }
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
