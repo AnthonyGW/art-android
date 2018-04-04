@@ -260,7 +260,7 @@ jobs:
           name: Assembling apk
           command: |
             cd ~/repo
-            ./gradlew :app:assembleRelease
+            ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
       - store_artifacts:
