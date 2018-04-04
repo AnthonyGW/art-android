@@ -255,6 +255,7 @@ jobs:
           name: Assembling apk
           command: |
             cd ~/repo
+            bash ~/repo/.circleci/download_keystore.sh
             ./gradlew build
 
       # Storing the generated apk files and reports
@@ -381,8 +382,6 @@ workflows:
             - pmd_lint
             - checkstyle_lint
       - deploy_test_build:
-          requires:
-            - test
           filters:
             branches:
               only: develop
