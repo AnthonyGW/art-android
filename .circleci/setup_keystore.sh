@@ -64,16 +64,6 @@ function downloadKeyStoreFile {
     else
             echo "Keystore uri not set, .APK artifact will not be signed."
     fi
-
-    echo "Looking for $DEBUG_STORE_FILE_LOCATION ..."
-
-    if [ ! -f ${DEBUG_STORE_FILE_LOCATION} ] ; then
-        echo "Downloading debug keystore file"
-
-        curl -L -o ${DEBUG_STORE_FILE} ${DEBUG_KEY_STORE_URI}
-    else
-            echo "Debug keystore uri not set, .APK artifact will not be signed."
-    fi
 }
 
 main() {
