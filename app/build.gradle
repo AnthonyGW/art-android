@@ -29,10 +29,12 @@ android {
         }
     }
     signingConfigs {
-        keyAlias rootProject.ext.keystoreProperties['keyAlias']
-        keyPassword rootProject.ext.keystoreProperties['keyPassword']
-        storeFile rootProject.file(rootProject.ext.keystoreProperties['storeFile'])
-        storePassword rootProject.ext.keystoreProperties['storePassword']
+        release {
+            keyAlias rootProject.ext.keystoreProperties['keyAlias']
+            keyPassword rootProject.ext.keystoreProperties['keyPassword']
+            storeFile rootProject.file(rootProject.ext.keystoreProperties['storeFile'])
+            storePassword rootProject.ext.keystoreProperties['storePassword']
+        }
     }
 }
 
