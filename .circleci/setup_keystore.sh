@@ -6,7 +6,7 @@ set -o pipefail
 export KEYSTORE_DIR=$HOME"/repo/keystores"
 export KEYSTORE_PROPERTIES=$HOME"/repo/keystores/keystore.properties"
 export DEBUG_KEYSTORE_PROPERTIES=$HOME"/repo/keystores/debug.keystore.properties"
-export STORE_FILE_LOCATION=$HOME"/repo/art-android-ks"
+export STORE_FILE_LOCATION=$HOME"/repo/art-android.jks"
 export DEBUG_STORE_FILE_LOCATION=$HOME"/repo/debug.keystore"
 
 function copyEnvVarsToProperties {
@@ -61,7 +61,6 @@ function downloadKeyStoreFile {
         echo "Downloading keystore file"
 
         curl -L -o ${STORE_FILE} ${KEY_STORE_URI}
-        echo $STORE_PASSWORD | keytool -importkeystore -srckeystore art-android-ks -destkeystore art-android-ks -deststoretype pkcs12
     else
             echo "Keystore uri not set, .APK artifact will not be signed."
     fi
