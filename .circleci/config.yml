@@ -5,6 +5,8 @@ default: &defaults
         username: _json_key
         password: '${SERVICE_ACCOUNT_JSON_KEY}'
 
+  working_directory: ~/repo/src
+
   environment:
     # Customize the JVM maximum heap limit
     JVM_OPTS: -Xmx3200m
@@ -35,7 +37,6 @@ jobs:
           name: Running quality checks
           command: |
             echo "Run android lint"
-            cd ~/repo
             ./gradlew lint
       
       # Storing reports
@@ -75,7 +76,6 @@ jobs:
           name: Running quality checks
           command: |
             echo "Run findbugs"
-            cd ~/repo
             ./gradlew assemble
             ./gradlew findbugs
       
@@ -116,7 +116,6 @@ jobs:
           name: Running quality checks
           command: |
             echo "Run PMD"
-            cd ~/repo
             ./gradlew pmd
       
       # Storing reports
@@ -156,7 +155,6 @@ jobs:
           name: Running quality checks
           command: |
             echo "Run checkstyle"
-            cd ~/repo
             ./gradlew checkstyle
       
       # Storing reports
@@ -195,7 +193,6 @@ jobs:
       - run:
           name: Running unit tests on source code
           command: |
-            cd ~/repo
             ./gradlew build jacocoTestReport assembleAndroidTest
             ls -a app/build/outputs/logs
       
@@ -256,7 +253,6 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-            cd ~/repo
             ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
@@ -300,7 +296,6 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-            cd ~/repo
             ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
@@ -344,7 +339,6 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-            cd ~/repo
             ./gradlew :app:assembleRelease
 
       # Storing the generated apk files and reports
