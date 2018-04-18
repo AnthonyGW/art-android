@@ -17,7 +17,9 @@ jobs:
   android_lint:
     <<: *defaults
     steps:
-      - checkout
+      - checkout:
+         override:
+         - github.com/AndelaOSP/art-mobile.git
       # Download and cache dependencies
       - restore_cache:
           keys:
