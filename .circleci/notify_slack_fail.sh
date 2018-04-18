@@ -16,81 +16,120 @@ declare_env_variables() {
 
   # Retrieving the urls for the CircleCI artifacts
 
-  CIRCLE_ARTIFACTS_URL="$(curl https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts?circle-token=${CIRCLE_TOKEN} | grep -o 'https://[^"]*' || true)"
+  CIRCLE_ARTIFACTS_URL="$(curl https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts?circle-token=${CIRCLE_TOKEN} | grep -o 'https://[^"]*')"
 
   # Assigning slack messages based on the CircleCI job name
 
   if [ "$CIRCLE_JOB" == 'android_lint' ]; then
-    MESSAGE_TEXT="Android Lint Phase Failed! :crying_cat_face:"
+    MESSAGE_TEXT="Android Lint Phase Passed! :smirk_cat:"
 
-    # Sorting through the artifact urls to get only the android lint report
+    # Sorting through the artifact urls to get only the android lint reports
 
     CIRCLE_REPORT_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' |  grep '\.html' || true)"
+/g' |  grep '\.html')"
     CIRCLE_ARTIFACTS_BUTTON="$(echo {\"type\": \"button\", \"text\": \"Android Lint Report\", \"url\": \"${CIRCLE_REPORT_ARTIFACTS}\"})"
 
   elif [ "$CIRCLE_JOB" == 'findbugs_lint' ]; then
-    MESSAGE_TEXT="Findbugs Lint Phase Failed! :crying_cat_face:"
+    MESSAGE_TEXT="Findbugs Lint Phase Passed! :smirk_cat:"
 
-    # Sorting through the artifact urls to get only the findbugs lint report
+    # Sorting through the artifact urls to get only the findbugs lint reports
 
     CIRCLE_REPORT_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' |  grep 'findbugs\.html' || true)"
+/g' |  grep 'findbugs\.html')"
     CIRCLE_ARTIFACTS_BUTTON="$(echo {\"type\": \"button\", \"text\": \"Findbugs Lint Report\", \"url\": \"${CIRCLE_REPORT_ARTIFACTS}\"})"
 
   elif [ "$CIRCLE_JOB" == 'pmd_lint' ]; then
-    MESSAGE_TEXT="PMD Lint Phase Failed! :crying_cat_face:"
+    MESSAGE_TEXT="PMD Lint Phase Passed! :smirk_cat:"
 
-    # Sorting through the artifact urls to get only the PMD lint report
+    # Sorting through the artifact urls to get only the PMD lint reports
 
     CIRCLE_REPORT_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' |  grep '\.html' || true)"
+/g' |  grep '\.html')"
     CIRCLE_ARTIFACTS_BUTTON="$(echo {\"type\": \"button\", \"text\": \"PMD Lint Report\", \"url\": \"${CIRCLE_REPORT_ARTIFACTS}\"})"
 
   elif [ "$CIRCLE_JOB" == 'checkstyle_lint' ]; then
-    MESSAGE_TEXT="Checkstyle Lint Phase Failed! :crying_cat_face:"
+    MESSAGE_TEXT="Checkstyle Lint Phase Passed! :smirk_cat:"
 
-    # Sorting through the artifact urls to get only the checkstyle lint report
+    # Sorting through the artifact urls to get only the findbugs lint reports
 
     CIRCLE_REPORT_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' |  grep '\.html' || true)"
+/g' |  grep '\.html')"
     CIRCLE_ARTIFACTS_BUTTON="$(echo {\"type\": \"button\", \"text\": \"Checkstyle Lint Report\", \"url\": \"${CIRCLE_REPORT_ARTIFACTS}\"})"
 
   elif [ "$CIRCLE_JOB" == 'test' ]; then
-    MESSAGE_TEXT="Test Phase Failed! :scream:"
+    MESSAGE_TEXT="Test Phase Passed! :smiley:"
 
     # Sorting through the artifact urls to get only the unit test and integration test reports
-
     DEBUG_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' |  grep 'testDebugUnitTest\/index\.html')"
+/g' | grep 'test[A-Za-z0-9]*Debug[A-Za-z0-9]*\/index\.html')"
     RELEASE_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' |  grep 'testReleaseUnitTest\/index\.html')"
+/g' | grep 'test[A-Za-z0-9]*Release[A-Za-z0-9]*\/index\.html')"
     JACOCO_DEBUG_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' |  grep 'jacocoTestDebugUnitTestReport\/html\/index\.html')"
+/g' | grep 'jacoco[A-Za-z0-9]*Debug[A-Za-z0-9]*\/html\/index\.html')"
     JACOCO_RELEASE_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' |  grep 'jacocoTestReleaseUnitTestReport\/html\/index\.html')"
+/g' | grep 'jacoco[A-Za-z0-9]*Release[A-Za-z0-9]*\/html\/index\.html')"
     INTEGRATION_TEST_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
 /g' |  grep 'AVD')"
-
     CIRCLE_ARTIFACTS_BUTTON="$(echo \
         "{\"type\": \"button\", \"text\": \"Unit Test Report (Debug)\", \"url\": \"${DEBUG_REPORT}\"}", \
         "{\"type\": \"button\", \"text\": \"Unit Test Report (Release)\", \"url\": \"${RELEASE_REPORT}\"}", \
         "{\"type\": \"button\", \"text\": \"Jacoco Test Report (Debug)\", \"url\": \"${JACOCO_DEBUG_REPORT}\"}", \
         "{\"type\": \"button\", \"text\": \"Jacoco Test Report (Release)\", \"url\": \"${JACOCO_RELEASE_REPORT}\"}", \
-        "{\"type\": \"button\", \"text\": \"Android Virtual Device (AVD) Test Report\", \"url\": \"${INTEGRATION_TEST_REPORT}\"}"
-      )"
+        "{\"type\": \"button\", \"text\": \"Android Virtual Device (AVD) Test Report\", \"url\": \"${INTEGRATION_TEST_REPORT}\"}" \
+    )"
 
   elif [ "$CIRCLE_JOB" == 'deploy_test_build' ]; then
-    MESSAGE_TEXT="Test Build for Deployment Failed! :scream:"
+    # Sorting through the artifact urls to get only the apk files
+    CIRCLE_APK_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep '\.apk')"
+
+    CIRCLE_DEBUG_ARTIFACT="$(echo $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep 'debug[a-z0-9.-]*[a-z0-9.-]*.apk$')"
+    CIRCLE_RELEASE_ARTIFACT="$(echo $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep 'release[a-z0-9.-]*[a-z0-9.-]*.apk$')"
+    CIRCLE_ARTIFACTS_BUTTON="$(echo \
+        "{\"type\": \"button\", \"text\": \"Debug APK\", \"url\": \"${CIRCLE_DEBUG_ARTIFACT}\"}", \
+        "{\"type\": \"button\", \"text\": \"Release APK\", \"url\": \"${CIRCLE_RELEASE_ARTIFACT}\"}" \
+    )"
+
+    MESSAGE_TEXT="Deploy Test Build Succeeded :rocket:"
+
 
   elif [ "$CIRCLE_JOB" == 'deploy_staging_build' ]; then
-    MESSAGE_TEXT="Staging Build for Deployment Failed! :scream:"
+    CIRCLE_APK_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep '\.apk')"
+
+    CIRCLE_DEBUG_ARTIFACT="$(echo $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep 'debug[a-z0-9.-]*[a-z0-9.-]*.apk$')"
+    CIRCLE_RELEASE_ARTIFACT="$(echo $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep 'release[a-z0-9.-]*[a-z0-9.-]*.apk$')"
+    CIRCLE_ARTIFACTS_BUTTON="$(echo \
+        "{\"type\": \"button\", \"text\": \"Debug APK\", \"url\": \"${CIRCLE_DEBUG_ARTIFACT}\"}", \
+        "{\"type\": \"button\", \"text\": \"Release APK\", \"url\": \"${CIRCLE_RELEASE_ARTIFACT}\"}" \
+    )"
+
+    MESSAGE_TEXT="Deploy Staging Build Succeeded :rocket:"
+
 
   elif [ "$CIRCLE_JOB" == 'deploy_production_build' ]; then
-    MESSAGE_TEXT="Production Build for Deployment Failed! :scream:"
+    CIRCLE_APK_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep '\.apk')"
+
+    CIRCLE_DEBUG_ARTIFACT="$(echo $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep 'debug[a-z0-9.-]*[a-z0-9.-]*.apk$')"
+    CIRCLE_RELEASE_ARTIFACT="$(echo $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep 'release[a-z0-9.-]*[a-z0-9.-]*.apk$')"
+    CIRCLE_ARTIFACTS_BUTTON="$(echo \
+        "{\"type\": \"button\", \"text\": \"Debug APK\", \"url\": \"${CIRCLE_DEBUG_ARTIFACT}\"}", \
+        "{\"type\": \"button\", \"text\": \"Release APK\", \"url\": \"${CIRCLE_RELEASE_ARTIFACT}\"}" \
+    )"
+
+    MESSAGE_TEXT="Deploy Production Build Succeeded :rocket:"
+
 
   else
-    MESSAGE_TEXT="Unknown job failed"
+    MESSAGE_TEXT="Unknown Task"
+    CIRCLE_ARTIFACTS_MESSAGE="No artifacts for unknown job"
   fi
 
   # Some template for the Slack message
@@ -112,7 +151,7 @@ send_notification() {
       \"username\": \"DeployNotification\", 
       \"attachments\": [{
           \"fallback\": \"CircleCI build notification and generated files\",
-          \"color\": \"danger\",
+          \"color\": \"good\",
           \"author_name\": \"Branch: $CIRCLE_BRANCH by ${CIRCLE_USERNAME}\",
           \"author_link\": \"https://github.com/AndelaOSP/art-android/tree/${CIRCLE_BRANCH}\",
           \"title\": \"${SLACK_TEXT_TITLE}\",
