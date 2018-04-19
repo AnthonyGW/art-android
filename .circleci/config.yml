@@ -194,6 +194,7 @@ jobs:
       - run:
           name: Running unit tests on source code
           command: |
+            sudo mv ~/.secrets ~/repo
             ./gradlew build jacocoTestReport assembleAndroidTest
       
       # Storing unit test reports
@@ -253,8 +254,8 @@ jobs:
           name: Run instrumented tests on firebase
           command: |
             gcloud beta firebase test android run \
-            --app app/build/outputs/apk/app-debug.apk \
-            --test app/build/outputs/apk/app-debug-test-unaligned.apk \
+            --app app/build/outputs/apk/debug/app-debug.apk \
+            --test app/build/outputs/apk/androidTest/app-debug-androidTest.apk \
             --results-bucket cloud-test-circle-ctl-test
 
       # Sending notification
@@ -427,12 +428,12 @@ workflows:
         #     - pmd_lint
         #     - checkstyle_lint
       - deploy_test_build
-        #   requires:
-        #     - unit_test
-        #     - instrumented_test
-        #   filters:
-        #     branches:
-        #       only: develop
+          requires:
+            - unit_test
+            - instrumented_test
+          filters:
+            branches:
+              only: develop
       - deploy_staging_build:
           requires:
             - unit_test
