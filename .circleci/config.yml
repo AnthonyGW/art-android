@@ -246,10 +246,9 @@ jobs:
       - run:
           name: Set gcloud project ID
           command: |
-            # echo $SERVICE_ACCOUNT_JSON_KEY | base64 -di > ${HOME}/client-secret.json
-            # gcloud config set project $GCP_PROJECT_ID
-            # gcloud auth activate-service-account dockeruser@microservicedemo-198709.iam.gserviceaccount.com \
-            # —-key-file=$SERVICE_ACCOUNT_JSON_KEY
+          echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
+          gcloud auth activate-service-account —-key-file ${HOME}/gcloud-service-key.json
+          gcloud config set project $GCP_PROJECT_ID
 
       # Send test apk to firebase
       - run:
