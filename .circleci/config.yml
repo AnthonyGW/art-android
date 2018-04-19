@@ -270,9 +270,9 @@ jobs:
           command: |
             bash .circleci/notify_slack_fail.sh
 
-    post:
-      # Download the test bucket content as CircleCI artifact
-      - gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-circle-ctl-test | tail -1` $CIRCLE_ARTIFACTS/ | true
+      post:
+        # Download the test bucket content as CircleCI artifact
+        - gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-circle-ctl-test | tail -1` $CIRCLE_ARTIFACTS/ | true
 
   deploy_test_build:
     <<: *defaults
