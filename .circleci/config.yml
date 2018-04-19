@@ -77,8 +77,8 @@ jobs:
           working_directory: /
           command: |
             echo "Run findbugs"
-            ~/repo/gradlew assemble
-            ~/repo/gradlew findbugs
+            ~/repo/gradlew assemble --stacktrace
+            ~/repo/gradlew findbugs --stacktrace
       
       # Storing reports
       - store_artifacts:
