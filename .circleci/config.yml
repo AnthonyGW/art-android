@@ -246,7 +246,7 @@ jobs:
           name: Set gcloud project ID
           command: |
             gcloud config set project $GCP_PROJECT_ID
-            gcloud auth activate-service-account — key-file=$SERVICE_ACCOUNT_JSON_KEY
+            gcloud auth activate-service-account —-key-file=$SERVICE_ACCOUNT_JSON_KEY
 
       # Send test apk to firebase
       - run:
