@@ -74,10 +74,11 @@ jobs:
       # Running static analysis tools
       - run:
           name: Running quality checks
+          working_directory: ~
           command: |
             echo "Run findbugs"
-            ./gradlew assemble
-            ./gradlew findbugs
+            repo/gradlew assemble
+            repo/gradlew findbugs
       
       # Storing reports
       - store_artifacts:
@@ -127,12 +128,12 @@ jobs:
           name: Notifying slack channel (succeeded)
           when: on_success
           command: |
-            bash ~/repo/.circleci/notify_slack.sh
+            bash .circleci/notify_slack.sh
       - run:
           name: Notifying slack channel (failed)
           when: on_fail
           command: |
-            bash ~/repo/.circleci/notify_slack_fail.sh
+            bash .circleci/notify_slack_fail.sh
 
   checkstyle_lint:
     <<: *defaults
