@@ -224,23 +224,23 @@ jobs:
     steps:
       - checkout
       # Download and cache dependencies
-    #   - restore_cache:
-    #       keys:
-    #       - v1-dependencies-{{ checksum "build.gradle" }}
-    #       # fallback to using the latest cache if no exact match is found
-    #       - v1-dependencies-
-    #   - run: ./gradlew androidDependencies
-    #   - save_cache:
-    #       paths:
-    #         - ~/.gradle
-    #       key: v1-dependencies-{{ checksum "build.gradle" }}
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
       
       # Build apk with instrumented tests
-    #   - run:
-    #       name: Creating an apk file with instrumented tests
-    #       command: |
-    #         sudo mv ~/.secrets ~/repo
-    #         ./gradlew build :app:assembleDebug :app:assembleAndroidTest -PdisablePreDex
+      - run:
+          name: Creating an apk file with instrumented tests
+          command: |
+            sudo mv ~/.secrets ~/repo
+            ./gradlew build :app:assembleDebug :app:assembleAndroidTest -PdisablePreDex
 
       # Set project ID and use the service account
       - run:
@@ -248,7 +248,7 @@ jobs:
           command: |
             echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
             cat ${HOME}/gcloud-service-key.json
-            gcloud auth activate-service-account dockeruser@microservicedemo-198709.iam.gserviceaccount.com —-key-file=${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             gcloud config set project $GCP_PROJECT_ID
 
       # Send test apk to firebase
