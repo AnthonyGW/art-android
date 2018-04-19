@@ -78,7 +78,16 @@ declare_env_variables() {
       )"
 
   elif [ "$CIRCLE_JOB" == 'instrumented_test' ]; then
-    MESSAGE_TEXT="Instrumented Test APK was not sent to Firebase"
+    MESSAGE_TEXT="Instrumented Test Phase Phase Failed"
+    INSTRUMENTED_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
+/g' | grep 'test[A-Za-z0-9_]*report[A-Za-z0-9_]*\.xml')"
+    TEST_VIDEO="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
+/g' | grep '\.mp4')"
+
+    CIRCLE_ARTIFACTS_BUTTON="$(echo \
+        "{\"type\": \"button\", \"text\": \"UI Test Report\", \"url\": \"${INSTRUMENTED_REPORT}\"}", \
+        "{\"type\": \"button\", \"text\": \"UI Test Video\", \"url\": \"${TEST_VIDEO}\"}", \
+    )"
 
   elif [ "$CIRCLE_JOB" == 'deploy_test_build' ]; then
     MESSAGE_TEXT="Test Build for Deployment Failed! :scream:"
