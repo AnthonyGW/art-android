@@ -414,16 +414,9 @@ workflows:
       - findbugs_lint
       - pmd_lint
       - checkstyle_lint
-      - unit_test:
-          requires:
-            - android_lint
-            - findbugs_lint
-            - pmd_lint
-            - checkstyle_lint
+      - unit_test
       - instrumented_test
-
       - deploy_test_build
-
       - deploy_staging_build:
           requires:
             - unit_test
