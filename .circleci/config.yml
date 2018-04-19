@@ -1,11 +1,11 @@
 default: &defaults
   docker:
-    - image: gcr.io/microservicedemo-198709/circlebuildenv:v2
+    - image: gcr.io/microservicedemo-198709/circlebuildenv:v3
       auth:
         username: _json_key
         password: '${SERVICE_ACCOUNT_JSON_KEY}'
 
-  working_directory: ~/src
+  working_directory: ~/repo
 
   environment:
     # Customize the JVM maximum heap limit
@@ -41,19 +41,19 @@ jobs:
       
       # Storing reports
       - store_artifacts:
-          path: ~/repo/app/build/reports
+          path: app/build/reports
       
       # Sending notification
       - run:
           name: Notifying slack channel (succeeded)
           when: on_success
           command: |
-            bash ~/repo/.circleci/notify_slack.sh
+            bash .circleci/notify_slack.sh
       - run:
           name: Notifying slack channel (failed)
           when: on_fail
           command: |
-            bash ~/repo/.circleci/notify_slack_fail.sh
+            bash .circleci/notify_slack_fail.sh
 
   findbugs_lint:
     <<: *defaults
@@ -81,19 +81,19 @@ jobs:
       
       # Storing reports
       - store_artifacts:
-          path: ~/repo/app/build/outputs
+          path: app/build/outputs
       
       # Sending notification
       - run:
           name: Notifying slack channel (succeeded)
           when: on_success
           command: |
-            bash ~/repo/.circleci/notify_slack.sh
+            bash .circleci/notify_slack.sh
       - run:
           name: Notifying slack channel (failed)
           when: on_fail
           command: |
-            bash ~/repo/.circleci/notify_slack_fail.sh
+            bash .circleci/notify_slack_fail.sh
 
   pmd_lint:
     <<: *defaults
@@ -120,7 +120,7 @@ jobs:
       
       # Storing reports
       - store_artifacts:
-          path: ~/repo/app/build
+          path: app/build
       
       # Sending notification
       - run:
@@ -159,19 +159,19 @@ jobs:
       
       # Storing reports
       - store_artifacts:
-          path: ~/repo/app/build/reports
+          path: app/build/reports
       
       # Sending notification
       - run:
           name: Notifying slack channel (succeeded)
           when: on_success
           command: |
-            bash ~/repo/.circleci/notify_slack.sh
+            bash .circleci/notify_slack.sh
       - run:
           name: Notifying slack channel (failed)
           when: on_fail
           command: |
-            bash ~/repo/.circleci/notify_slack_fail.sh
+            bash .circleci/notify_slack_fail.sh
 
   test:
     <<: *defaults 
@@ -194,14 +194,13 @@ jobs:
           name: Running unit tests on source code
           command: |
             ./gradlew build jacocoTestReport assembleAndroidTest
-            ls -a app/build/outputs/logs
       
       # Storing unit test reports
       - store_artifacts:
-          path: ~/repo/app/build/reports/jacoco
+          path: app/build/reports/jacoco
           destination: reports
       - store_artifacts:
-          path: ~/repo/app/build/reports/tests
+          path: app/build/reports/tests
           destination: reports
       
       # Running UI tests
@@ -216,7 +215,7 @@ jobs:
       
       # Storing UI test reports
       - store_artifacts:
-          path: ~/repo/app/build/outputs/androidTest-results
+          path: app/build/outputs/androidTest-results
           destination: reports
       
       # Sending notification
@@ -225,13 +224,13 @@ jobs:
           when: on_success
           command: |
             bash <(curl -s https://codecov.io/bash)
-            bash ~/repo/.circleci/notify_slack.sh
+            bash .circleci/notify_slack.sh
       - run:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
             bash <(curl -s https://codecov.io/bash)
-            bash ~/repo/.circleci/notify_slack_fail.sh
+            bash .circleci/notify_slack_fail.sh
 
   deploy_test_build:
     <<: *defaults
@@ -257,11 +256,11 @@ jobs:
 
       # Storing the generated apk files and reports
       - store_artifacts:
-          path: ~/repo/app/build/outputs/apk/prod/debug
+          path: app/build/outputs/apk/prod/debug
       - store_artifacts:
-          path: ~/repo/app/build/outputs/apk/prod/release
+          path: app/build/outputs/apk/prod/release
       - store_artifacts:
-          path: ~/repo/app/build/reports
+          path: app/build/reports
           destination: reports
 
       # Sending notification
@@ -269,12 +268,12 @@ jobs:
           name: Notifying slack channel on succeed
           when: on_success
           command: |
-            bash ~/repo/.circleci/notify_slack.sh
+            bash .circleci/notify_slack.sh
       - run:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            bash ~/repo/.circleci/notify_slack_fail.sh
+            bash .circleci/notify_slack_fail.sh
 
   deploy_staging_build:
     <<: *defaults
@@ -300,11 +299,11 @@ jobs:
 
       # Storing the generated apk files and reports
       - store_artifacts:
-          path: ~/repo/app/build/outputs/apk/prod/debug
+          path: app/build/outputs/apk/prod/debug
       - store_artifacts:
-          path: ~/repo/app/build/outputs/apk/prod/release
+          path: app/build/outputs/apk/prod/release
       - store_artifacts:
-          path: ~/repo/app/build/reports
+          path: app/build/reports
           destination: reports
 
       # Sending notification
@@ -312,12 +311,12 @@ jobs:
           name: Notifying slack channel on succeed
           when: on_success
           command: |
-            bash ~/repo/.circleci/notify_slack.sh
+            bash .circleci/notify_slack.sh
       - run:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            bash ~/repo/.circleci/notify_slack_fail.sh
+            bash .circleci/notify_slack_fail.sh
 
   deploy_production_build:
     <<: *defaults
@@ -343,11 +342,11 @@ jobs:
 
       # Storing the generated apk files and reports
       - store_artifacts:
-          path: ~/repo/app/build/outputs/apk/prod/debug
+          path: app/build/outputs/apk/prod/debug
       - store_artifacts:
-          path: ~/repo/app/build/outputs/apk/prod/release
+          path: app/build/outputs/apk/prod/release
       - store_artifacts:
-          path: ~/repo/app/build/reports
+          path: app/build/reports
           destination: reports
 
       # Sending notification
@@ -355,12 +354,12 @@ jobs:
           name: Notifying slack channel on succeed
           when: on_success
           command: |
-            bash ~/repo/.circleci/notify_slack.sh
+            bash .circleci/notify_slack.sh
       - run:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            bash ~/repo/.circleci/notify_slack_fail.sh
+            bash .circleci/notify_slack_fail.sh
 
 workflows:
   version: 2
