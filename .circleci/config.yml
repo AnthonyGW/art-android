@@ -338,8 +338,8 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-          sudo mv ~/.secrets ~/repo
-          ./gradlew :app:assemble
+            sudo mv ~/.secrets ~/repo
+            ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
       - store_artifacts:
