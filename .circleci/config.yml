@@ -279,7 +279,6 @@ jobs:
           name: Notifying slack channel on succeed
           when: on_success
           command: |
-            gsutil -m cp -r -U `sudo gsutil ls gs://art-firebase-test-results | tail -1` $CIRCLE_ARTIFACTS/ | true
             echo $CIRCLE_ARTIFACTS
             bash .circleci/notify_slack.sh
 
@@ -287,7 +286,6 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            gsutil -m cp -r -U `sudo gsutil ls gs://art-firebase-test-results | tail -1` $CIRCLE_ARTIFACTS/ | true
             echo $CIRCLE_ARTIFACTS
             bash .circleci/notify_slack_fail.sh
 
