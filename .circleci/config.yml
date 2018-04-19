@@ -75,7 +75,7 @@ jobs:
       - run:
           name: Running quality checks
           command: |
-            mv ~/.secrets ~/repo
+            sudo mv ~/.secrets ~/repo
             echo "Run findbugs"
             ./gradlew assemble
             ./gradlew findbugs
