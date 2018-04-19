@@ -261,8 +261,8 @@ jobs:
             --test app/build/outputs/apk/androidTest/app-debug-androidTest.apk \
             --directories-to-pull=/sdcard/tmp \
             --timeout 20m \
-            --results-bucket cloud-test-circle-ctl-test
-            gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-circle-ctl-test | tail -1` $CIRCLE_ARTIFACTS/ | true
+            --results-bucket art-firebase-test-results
+            gsutil -m cp -r -U `sudo gsutil ls gs://art-firebase-test-results | tail -1` $CIRCLE_ARTIFACTS/ | true
 
       # Sending notification
       - run:
