@@ -173,7 +173,7 @@ jobs:
           command: |
             bash .circleci/notify_slack_fail.sh
 
-  test:
+  unit_test:
     <<: *defaults 
     steps:
       - checkout
@@ -203,21 +203,6 @@ jobs:
           path: app/build/reports/tests
           destination: reports
       
-      # Running UI tests
-      - run:
-          name: Running integration tests on apk build
-          command: |
-            echo y | sdkmanager "system-images;android-22;default;armeabi-v7a"
-            echo no | avdmanager create avd --force --name test --abi armeabi-v7a -k "system-images;android-22;default;armeabi-v7a"
-            echo y | emulator -avd test -skin 768x1280 -no-window &
-            circle-android wait-for-boot
-            ./gradlew connectedAndroidTest
-      
-      # Storing UI test reports
-      - store_artifacts:
-          path: app/build/outputs/androidTest-results
-          destination: reports
-      
       # Sending notification
       - run:
           name: Notifying slack channel on succeed
@@ -231,6 +216,61 @@ jobs:
           command: |
             bash <(curl -s https://codecov.io/bash)
             bash .circleci/notify_slack_fail.sh
+
+  instrumented_test:
+    <<: *defaults 
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      
+      # Build apk with instrumented tests
+      - run:
+          name: Creating an apk file with instrumented tests
+          command: |
+            ./gradlew build :app:assembleAndroidTest -PdisablePreDex
+
+      # Set project ID
+      - run:
+          name: Set gcloud project ID
+          command: |
+            gcloud config set project $GCP_PROJECT_ID
+            gcloud auth activate-service-account — key-file=$SERVICE_ACCOUNT_JSON_KEY
+
+      # Send test apk to firebase
+      - run:
+          name: Run instrumented tests on firebase
+          command: |
+            gcloud beta firebase test android run \
+            --app app/build/outputs/apk/app-debug.apk \
+            --test app/build/outputs/apk/app-debug-test-unaligned.apk \
+            --results-bucket cloud-test-circle-ctl-test
+
+      # Sending notification
+      - run:
+          name: Notifying slack channel on succeed
+          when: on_success
+          command: |
+            bash .circleci/notify_slack.sh
+
+      - run:
+          name: Notifying slack channel on fail
+          when: on_fail
+          command: |
+            bash .circleci/notify_slack_fail.sh
+
+    post:
+      # Download the test bucket content as CircleCI artifact
+      - gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-circle-ctl-test | tail -1` $CIRCLE_ARTIFACTS/ | true
 
   deploy_test_build:
     <<: *defaults
@@ -369,7 +409,13 @@ workflows:
       - findbugs_lint
       - pmd_lint
       - checkstyle_lint
-      - test:
+      - unit_test:
+          requires:
+            - android_lint
+            - findbugs_lint
+            - pmd_lint
+            - checkstyle_lint
+      - instrumented_test:
           requires:
             - android_lint
             - findbugs_lint
@@ -377,7 +423,8 @@ workflows:
             - checkstyle_lint
       - deploy_test_build:
           requires:
-            - test
+            - unit_test
+            - instrumented_test
           filters:
             branches:
               only: develop
