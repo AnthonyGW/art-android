@@ -240,23 +240,29 @@ jobs:
           name: Creating an apk file with instrumented tests
           command: |
             sudo mv ~/.secrets ~/repo
-            ./gradlew build :app:assembleAndroidTest -PdisablePreDex
+            ./gradlew build :app:assembleDebug :app:assembleAndroidTest -PdisablePreDex
 
       # Set project ID
       - run:
           name: Set gcloud project ID
           command: |
+            echo $SERVICE_ACCOUNT_JSON_KEY | base64 -di > ${HOME}/client-secret.json
             gcloud config set project $GCP_PROJECT_ID
-            gcloud auth application-default activate-service-account —-key-file $SERVICE_ACCOUNT_JSON_KEY
+            gcloud auth activate-service-account dockeruser@microservicedemo-198709.iam.gserviceaccount.com \
+            —-key-file ${HOME}/client-secret.json
 
       # Send test apk to firebase
       - run:
           name: Run instrumented tests on firebase
           command: |
             gcloud beta firebase test android run \
+            --type instrumentation \
             --app app/build/outputs/apk/debug/app-debug.apk \
             --test app/build/outputs/apk/androidTest/app-debug-androidTest.apk \
+            --directories-to-pull=/sdcard/tmp \
+            --timeout 20m \
             --results-bucket cloud-test-circle-ctl-test
+            gsutil -m cp -r -U `sudo gsutil ls gs://cloud-test-circle-ctl-test | tail -1` $CIRCLE_ARTIFACTS/ | true
 
       # Sending notification
       - run:
