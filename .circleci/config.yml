@@ -74,11 +74,11 @@ jobs:
       # Running static analysis tools
       - run:
           name: Running quality checks
-          working_directory: ~
+          working_directory: /
           command: |
             echo "Run findbugs"
-            repo/gradlew assemble
-            repo/gradlew findbugs
+            ~/repo/gradlew assemble
+            ~/repo/gradlew findbugs
       
       # Storing reports
       - store_artifacts:
