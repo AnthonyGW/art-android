@@ -74,10 +74,9 @@ jobs:
       # Running static analysis tools
       - run:
           name: Running quality checks
-          working_directory: /
           command: |
+            mv ~/.secrets ~/repo
             echo "Run findbugs"
-            cd ~/repo
             ./gradlew assemble
             ./gradlew findbugs
       
