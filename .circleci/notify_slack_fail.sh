@@ -27,7 +27,7 @@ declare_env_variables() {
 
     CIRCLE_REPORT_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
 /g' |  grep '\.html' || true)"
-    CIRCLE_ARTIFACTS_BUTTON="$(echo {\"type\": \"button\", \"text\": \"Android Lint Report\", \"url\": \"${CIRCLE_REPORT_ARTIFACTS}\"})"
+    CIRCLE_ARTIFACTS_BUTTON="$(ecIho {\"type\": \"button\", \"text\": \"Android Lint Report\", \"url\": \"${CIRCLE_REPORT_ARTIFACTS}\"})"
 
   elif [ "$CIRCLE_JOB" == 'findbugs_lint' ]; then
     MESSAGE_TEXT="Findbugs Lint Phase Failed! :crying_cat_face:"
@@ -80,9 +80,9 @@ declare_env_variables() {
   elif [ "$CIRCLE_JOB" == 'instrumented_test' ]; then
     MESSAGE_TEXT="Instrumented Test Phase Phase Failed"
     INSTRUMENTED_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' | grep 'test[A-Za-z0-9_]*report[A-Za-z0-9_]*\.xml')"
+/g' | grep '\.xml' || true)"
     TEST_VIDEO="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
-/g' | grep '\.mp4')"
+/g' | grep '\.mp4' || true)"
 
     CIRCLE_ARTIFACTS_BUTTON="$(echo \
         "{\"type\": \"button\", \"text\": \"UI Test Report\", \"url\": \"${INSTRUMENTED_REPORT}\"}", \
