@@ -5,7 +5,7 @@ default: &defaults
         username: _json_key
         password: '${SERVICE_ACCOUNT_JSON_KEY}'
 
-  working_directory: ~/repo/src
+  working_directory: ~/repo
 
   environment:
     # Customize the JVM maximum heap limit
