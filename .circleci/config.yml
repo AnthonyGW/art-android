@@ -73,7 +73,7 @@ jobs:
       - run:
           name: Running quality checks
           command: |
-            sudo mv ~/.secrets ~/repo
+            mv ~/.secrets ~/repo
             echo "Run findbugs"
             ./gradlew assemble
             ./gradlew findbugs
@@ -192,7 +192,7 @@ jobs:
       - run:
           name: Running unit tests on source code
           command: |
-            sudo mv ~/.secrets ~/repo
+            mv ~/.secrets ~/repo
             ./gradlew build jacocoTestReport assembleAndroidTest
       
       # Storing unit test reports
@@ -237,7 +237,7 @@ jobs:
       - run:
           name: Creating an apk file with instrumented tests
           command: |
-            sudo mv ~/.secrets ~/repo
+            mv ~/.secrets ~/repo
             ./gradlew build :app:assembleDebug :app:assembleAndroidTest -PdisablePreDex
 
       # Set project ID and use the service account
@@ -312,7 +312,7 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-            sudo mv ~/.secrets ~/repo
+            mv ~/.secrets ~/repo
             ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
@@ -356,7 +356,7 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-            sudo mv ~/.secrets ~/repo
+            mv ~/.secrets ~/repo
             ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
@@ -400,7 +400,7 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-            sudo mv ~/.secrets ~/repo
+            mv ~/.secrets ~/repo
             ./gradlew :app:assembleRelease
 
       # Storing the generated apk files and reports
