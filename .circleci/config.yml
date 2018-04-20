@@ -438,7 +438,7 @@ workflows:
             - findbugs_lint
             - pmd_lint
             - checkstyle_lint
-      - instrumented_test:
+      - instrumented_test
       - deploy_test_build:
           requires:
             - unit_test
