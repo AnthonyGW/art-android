@@ -1,6 +1,6 @@
 default: &defaults
   docker:
-    - image: gcr.io/microservicedemo-198709/circlebuildenv:v4
+    - image: gcr.io/microservicedemo-198709/circlebuildenv:v5
       auth:
         username: _json_key
         password: '${SERVICE_ACCOUNT_JSON_KEY}'
@@ -18,8 +18,6 @@ jobs:
     <<: *defaults
     steps:
       - checkout:
-         override:
-         - github.com/AndelaOSP/art-mobile.git
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -426,12 +424,12 @@ workflows:
             - findbugs_lint
             - pmd_lint
             - checkstyle_lint
-      - instrumented_test
-        #   requires:
-        #     - android_lint
-        #     - findbugs_lint
-        #     - pmd_lint
-        #     - checkstyle_lint
+      - instrumented_test:
+          requires:
+            - android_lint
+            - findbugs_lint
+            - pmd_lint
+            - checkstyle_lint
       - deploy_test_build:
           requires:
             - unit_test
