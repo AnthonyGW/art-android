@@ -255,23 +255,37 @@ jobs:
             gcloud beta firebase test android run \
             --type instrumentation \
             --app app/build/outputs/apk/debug/app-debug.apk \
-            --test app/build/outputs/apk/androidTest/app-debug-androidTest.apk \
+            --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --directories-to-pull=/sdcard/tmp \
             --timeout 20m \
             --results-bucket art-firebase-test-results
-            gsutil -m cp -r -U `sudo gsutil ls gs://art-firebase-test-results | tail -1` $CIRCLE_ARTIFACTS/ | true
+      # Get test reports from the storage bucket
+      - run:
+          name: Download test reports from storage bucket
+          when: always
+          command: |
+            REPORTS_DIR=$(gsutil ls gs://art-firebase-test-results | tail -1)
+            mkdir ~/reports
+            gsutil cp -r $REPORTS_DIR ~/reports
+
+      # Storing instrumented test reports
+      - store_artifacts:
+          path: ~/reports
+          destination: reports
 
       # Sending notification
       - run:
           name: Notifying slack channel on succeed
           when: on_success
           command: |
+            echo $CIRCLE_ARTIFACTS
             bash .circleci/notify_slack.sh
 
       - run:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
+            echo $CIRCLE_ARTIFACTS
             bash .circleci/notify_slack_fail.sh
 
     #   - post:

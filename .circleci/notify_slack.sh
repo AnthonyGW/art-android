@@ -77,6 +77,15 @@ declare_env_variables() {
 
   elif [ "$CIRCLE_JOB" == 'instrumented_test' ]; then
     MESSAGE_TEXT="Instrumented Test Sent to Firebase."
+    INSTRUMENTED_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
+/g' | grep 'test[A-Za-z0-9_]*report[A-Za-z0-9_]*\.xml')"
+    TEST_VIDEO="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
+/g' | grep '\.mp4')"
+
+    CIRCLE_ARTIFACTS_BUTTON="$(echo \
+        "{\"type\": \"button\", \"text\": \"UI Test Report\", \"url\": \"${INSTRUMENTED_REPORT}\"}", \
+        "{\"type\": \"button\", \"text\": \"UI Test Video\", \"url\": \"${TEST_VIDEO}\"}", \
+    )"
 
   elif [ "$CIRCLE_JOB" == 'deploy_test_build' ]; then
     # Sorting through the artifact urls to get only the apk files
