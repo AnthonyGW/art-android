@@ -264,6 +264,7 @@ jobs:
       # Get test reports from the storage bucket
       - run:
           name: Download test reports from storage bucket
+          when: always
           command: |
             REPORTS_DIR=$(gsutil ls gs://art-firebase-test-results | tail -1)
             mkdir ~/reports
