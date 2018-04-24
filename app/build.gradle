@@ -21,10 +21,10 @@ android {
     }
     signingConfigs {
         release {
-            keyAlias rootProject.ext.keystoreProperties['keyAlias']
-            keyPassword rootProject.ext.keystoreProperties['keyPassword']
-            storeFile rootProject.file(rootProject.ext.keystoreProperties['storeFile'])
-            storePassword rootProject.ext.keystoreProperties['storePassword']
+            keyAlias ${System.getenv("KEY_ALIAS")}
+            keyPassword ${System.getenv("KEY_PASSWORD")}
+            storeFile ${System.getenv("STORE_PATH")}
+            storePassword ${System.getenv("STORE_PASSWORD")}
         }
     }
     buildTypes {
