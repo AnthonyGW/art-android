@@ -236,7 +236,6 @@ jobs:
       - run:
           name: Creating an apk file with instrumented tests
           command: |
-            sudo mv ~/.secrets ~/repo
             ./gradlew build :app:assembleDebug :app:assembleAndroidTest -PdisablePreDex
 
       # Set project ID and use the service account
