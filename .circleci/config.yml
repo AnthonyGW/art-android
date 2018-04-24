@@ -1,6 +1,6 @@
 default: &defaults
   docker:
-    - image: gcr.io/microservicedemo-198709/circlebuildenv:v6
+    - image: gcr.io/andela-learning/circlebuildenv:v4
       auth:
         username: _json_key
         password: '${SERVICE_ACCOUNT_JSON_KEY}'
@@ -73,7 +73,6 @@ jobs:
       - run:
           name: Running quality checks
           command: |
-            mv /home/.secrets ~/repo
             echo "Run findbugs"
             ./gradlew assemble
             ./gradlew findbugs
@@ -312,7 +311,6 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-            mv /home/.secrets ~/repo
             ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
@@ -356,7 +354,6 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-            mv /home/.secrets ~/repo
             ./gradlew :app:assemble
 
       # Storing the generated apk files and reports
@@ -400,7 +397,6 @@ jobs:
       - run:
           name: Assembling apk
           command: |
-            mv /home/.secrets ~/repo
             ./gradlew :app:assembleRelease
 
       # Storing the generated apk files and reports
