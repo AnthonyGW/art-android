@@ -191,7 +191,7 @@ jobs:
       - run:
           name: Running unit tests on source code
           command: |
-            mv /home/.secrets ~/repo
+            sudo mv ~/.secrets ~/repo
             ./gradlew build jacocoTestReport assembleAndroidTest
       
       # Storing unit test reports
@@ -236,7 +236,7 @@ jobs:
       - run:
           name: Creating an apk file with instrumented tests
           command: |
-            mv /home/.secrets ~/repo
+            sudo mv ~/.secrets ~/repo
             ./gradlew build :app:assembleDebug :app:assembleAndroidTest -PdisablePreDex
 
       # Set project ID and use the service account
