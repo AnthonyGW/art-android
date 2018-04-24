@@ -23,7 +23,7 @@ android {
         release {
             keyAlias "$System.env.KEY_ALIAS"
             keyPassword "$System.env.KEY_PASSWORD"
-            storeFile "$System.env.STORE_PATH"
+            storeFile file("$System.env.STORE_PATH")
             storePassword "$System.env.STORE_PASSWORD"
         }
     }
