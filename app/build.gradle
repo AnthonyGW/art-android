@@ -23,7 +23,7 @@ android {
         release {
             keyAlias "$System.env.KEY_ALIAS"
             keyPassword "$System.env.KEY_PASSWORD"
-            storeFile file("$System.env.STORE_PATH")
+            storeFile file("$System.env.HOME/.secrets/art-android.jks")
             storePassword "$System.env.STORE_PASSWORD"
         }
     }
